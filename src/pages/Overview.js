@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Tabs, Tab, Button, Drawer, List, ListItem, ListItemText, makeStyles, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Tabs, Tab, Button, Drawer, List, ListItem, ListItemText, makeStyles, Table, TableContainer, TableHead, TableBody,TextField, TableRow, TableCell, Paper, IconButton } from '@material-ui/core';
 import {  Link } from 'react-router-dom';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CloseIcon from '@material-ui/icons/Close';
@@ -12,6 +12,13 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
+import DoneIcon from '@material-ui/icons/Done';
+import PowerIcon from '@material-ui/icons/Power';
+import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
+import ExtensionIcon from '@material-ui/icons/Extension';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
+import FilterNoneOutlinedIcon from '@material-ui/icons/FilterNoneOutlined';
 
 const DrawerWidth = 300;
 const HeaderHeight = 150;
@@ -19,6 +26,9 @@ const HeaderHeight = 150;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    backgroundColor: '#fafafa',
+    height: '100vh', // Ensure full viewport height
+    padding: theme.spacing(0), // Add padding as needed
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -72,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: HeaderHeight,
     height: `calc(100vh - ${HeaderHeight}px)`,
     marginLeft: DrawerWidth,
-
     position: 'relative',
   },
 
@@ -156,18 +165,6 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: 'none',
       padding: '8px', // Adjust the padding of table cells
     },
-    TableContent: {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        padding: theme.spacing(3),
-        backgroundColor: '#fafafa',
-        width: 'calc(100% - 300px)', // Adjust based on drawer width
-        height: '100%',
-      },
-      tableContainer: {
-        width: '50px',
-      },
   },
   inputField: {
     border: 'none',
@@ -175,6 +172,16 @@ const useStyles = makeStyles((theme) => ({
     padding: '4px',
     width: '100%', // Adjust the width of input fields
   },
+
+  cancelButton: {
+    right: 10,
+    color: 'red',
+    borderColor: 'red'
+  },
+  nameLabel: {
+    fontSize: '1.9rem', 
+  },
+
 }));
 
 const Header = () => {
@@ -271,130 +278,239 @@ const StatisticsPage = () => {
 };
 
 const GeneralPage = () => {
-    const classes = useStyles();
-    const [editMode, setEditMode] = useState(false);
-    const [customerData, setCustomerData] = useState({
+  const classes = useStyles();
+  const [editModeCustomer, setEditModeCustomer] = useState(false);
+  const [editModeVehicle, setEditModeVehicle] = useState(false);
+  const [customerData, setCustomerData] = useState({
+    name: 'Oleksandr',
+    phoneNumber: '+000000',
+    email: 'test@email.com',
+    street: 'mazepy',
+    city: 'Ivano-Frankivsk',
+  });
+  const [vehicleData, setVehicleData] = useState({
+    CarPlate: 'AT0000AK',
+    ID: 'AMLMEAF931LKS0000',
+    Date: '24.02.2022',
+    Model: 'Volvo V40',
+    Fuel: 'Diesel',
+    BatteryCap: '140 kW',
+  });
+
+  const handleEditCustomer = () => {
+    setEditModeCustomer(!editModeCustomer);
+  };
+
+  const handleEditVehicle = () => {
+    setEditModeVehicle(!editModeVehicle);
+  };
+
+  const handleCancelEditCustomer = () => {
+    setEditModeCustomer(false);
+    // Reset customer data to its original values
+    setCustomerData({
       name: 'Oleksandr',
       phoneNumber: '+000000',
       email: 'test@email.com',
       street: 'mazepy',
-      city: 'Ivano-Frankivsk'
+      city: 'Ivano-Frankivsk',
     });
-  
-    const handleEdit = () => {
-      setEditMode(!editMode);
-    };
-  
-    const handleChange = (field, value) => {
-      setCustomerData({ ...customerData, [field]: value });
-    };
-  
-    return (
-      <div className={classes.content} style={{ backgroundColor: '#fafafa', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 10, left: 0, width: '1000px', height: '200px' }}>
-        <div style={{ backgroundColor: '#fafafa', padding: '25px', position: 'relative' }}>
-          <Typography variant="h6" gutterBottom style={{ color: 'gray' }}>
-          &nbsp;&nbsp;Customer 
+  };
+
+  const handleCancelEditVehicle = () => {
+    setEditModeVehicle(false);
+    // Reset vehicle data to its original values
+    setVehicleData({
+      CarPlate: 'AT0000AK',
+      ID: 'AMLMEAF931LKS0000',
+      Date: '24.02.2022',
+      Model: 'Volvo V40',
+      Fuel: 'Diesel',
+      BatteryCap: '140 kW',
+    });
+  };
+
+  const handleChangeCustomer = (field, value) => {
+    setCustomerData({ ...customerData, [field]: value });
+  };
+
+  const handleChangeVehicle = (field, value) => {
+    setVehicleData({ ...vehicleData, [field]: value });
+  };
+  const contractDetailsData = {
+    ID: '00001',
+    durationDistance: '36 months / 140.000 km',
+    startDate: '01/02/2024',
+    endDate: '01/02/2027',
+    totalPrice: '$3.555,00 $',
+    customerPriceMonth: '98,75 $',
+    odometerExpiration: '140.001 km',
+    startMileage: '1 km',
+  };
+
+  return (
+    <div className={classes.content}>
+      {/* Customer Table */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '200px' }}>
+        <div style={{  padding: '25px', position: 'relative' }}>
+          <Typography variant="h6" gutterBottom style={{ color: 'grey' }}>
+            &nbsp;&nbsp;Customer 
             <div style={{ position: 'absolute', top: 20, right: 35 }}>
-              {editMode ? (
-                <IconButton onClick={handleEdit} className={classes.editButton}>
-                  {editMode ? (
-                    <EditIcon style={{ margin: 0, padding: 0 }} />
-                  ) : (
-                    <>
-                      <EditIcon style={{ margin: 0, padding: 0 }} />
-                    </>
-                  )}
-                </IconButton>
+              {editModeCustomer ? (
+                <>
+                  <Button variant="outlined" color="error" onClick={handleCancelEditCustomer} className={`${classes.editButton} ${classes.cancelButton}`}>
+                    Cancel
+                  </Button>
+                  <IconButton onClick={handleEditCustomer} className={classes.editButton}>
+                    <DoneIcon style={{ color: '#013220', margin: -10, padding: 0 }} />
+                  </IconButton>
+                </>
               ) : (
-                <Button variant="outlined" color="primary" onClick={handleEdit} className={classes.editButton}>
-               <EditIcon/>&nbsp;Edit
+                <Button variant="outlined" color="primary" onClick={handleEditCustomer} className={classes.editButton}>
+                  <EditIcon />&nbsp;Edit
                 </Button>
               )}
             </div>
           </Typography>
+          {/* Customer Table Content */}
           <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
             <Table style={{ borderCollapse: 'collapse' }}>
               <TableBody>
-                <TableRow>
-                  <TableCell style={{ borderBottom: 'none', padding: 15, display: 'flex', alignItems: 'center' }}>
-                    <AccountCircleIcon style={{fontSize: 45, color:'#105e65', margin: 0, padding: 0 }} />
-                    <Typography variant="body1" style={{ fontSize: '32px',margin: 0, marginLeft: '8px' }}>{editMode ? (
-                      <input
-                        type="text"
-                        value={customerData.name}
-                        onChange={(e) => handleChange('name', e.target.value)}
-                      />
-                    ) : (
-                      customerData.name
-                    )}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ borderBottom: 'none', padding: 15, display: 'flex', alignItems: 'center' }}>
-                    <PhoneIcon style={{ color:'#105e65', margin: 0, padding: 0 }} />
-                    <Typography variant="body1" style={{ margin: 0, marginLeft: '8px' }}>{editMode ? (
-                      <input
-                        type="text"
-                        value={customerData.phoneNumber}
-                        onChange={(e) => handleChange('phoneNumber', e.target.value)}
-                      />
-                    ) : (
-                      customerData.phoneNumber
-                    )}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ borderBottom: 'none', padding: 15, display: 'flex', alignItems: 'center' }}>
-                    <EmailIcon style={{color:'#105e65', margin: 0, padding: 0 }} />
-                    <Typography variant="body1" style={{ margin: 0, marginLeft: '8px' }}>{editMode ? (
-                      <input
-                        type="text"
-                        value={customerData.email}
-                        onChange={(e) => handleChange('email', e.target.value)}
-                      />
-                    ) : (
-                      customerData.email
-                    )}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ borderBottom: 'none', padding: 15, display: 'flex', alignItems: 'center' }}>
-                    <LocationOnIcon style={{color:'#105e65', margin: 0, padding: 0 }} />
-                    <Typography variant="body1" style={{ margin: 0, marginLeft: '8px' }}>{editMode ? (
-                      <input
-                        type="text"
-                        value={customerData.street}
-                        onChange={(e) => handleChange('street', e.target.value)}
-                      />
-                    ) : (
-                      customerData.street
-                    )}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ borderBottom: 'none', padding: 15, display: 'flex', alignItems: 'center' }}>
-                    <LocationCityIcon style={{color:'#105e65', margin: 0, padding: 0 }} />
-                    <Typography variant="body1" style={{ margin: 0, marginLeft: '8px' }}>{editMode ? (
-                      <input
-                        type="text"
-                        value={customerData.city}
-                        onChange={(e) => handleChange('city', e.target.value)}
-                      />
-                    ) : (
-                      customerData.city
-                    )}</Typography>
-                  </TableCell>
-                </TableRow>
+                {Object.entries(customerData).map(([key, value]) => (
+                  <TableRow key={key}>
+                    <TableCell style={{ borderBottom: 'none', padding: 15, display: 'flex', alignItems: 'center' }}>
+                      {getIconByKey(key)} {/* Adding icon */}
+                      <Typography variant={key === 'name' ? 'h6' : 'body1'} className={key === 'name' ? classes.nameLabel : null} style={{ margin: 0, marginLeft: '16px' }}>
+                        {editModeCustomer ? (
+                          <TextField
+                            type="text"
+                            value={value}
+                            onChange={(e) => handleChangeCustomer(key, e.target.value)}
+                            className={classes.inputField}
+                          />
+                        ) : (
+                          value
+                        )}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
         </div>
       </div>
-    </div>
-    );
-  };
+      {/* Vehicle Table */}
+      <div style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '200px' }}>
+        <div style={{ padding: '25px', position: 'relative' }}>
+          <Typography variant="h6" gutterBottom style={{ color: 'grey' }}>
+            &nbsp;&nbsp;Vehicle 
+            <div style={{ position: 'absolute', top: 20, right: 35 }}>
+              {editModeVehicle ? (
+                <>
+                  <Button variant="outlined" color="error" onClick={handleCancelEditVehicle} className={`${classes.editButton} ${classes.cancelButton}`}>
+                    Cancel
+                  </Button>
+                  <IconButton onClick={handleEditVehicle} className={classes.editButton}>
+                    <DoneIcon style={{ color: '#013220', margin: -10, padding: 0 }} />
+                  </IconButton>
+                </>
+              ) : (
+                <Button variant="outlined" color="primary" onClick={handleEditVehicle} className={classes.editButton}>
+                  <EditIcon />&nbsp;Edit
+                </Button>
+              )}
+            </div>
+          </Typography>
+          {/* Vehicle Table Content */}
+          <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
+            <Table style={{ borderCollapse: 'collapse' }}>
+              <TableBody>
+                {Object.entries(vehicleData).map(([key, value]) => (
+                  <TableRow key={key}>
+                    <TableCell style={{ borderBottom: 'none', padding: 15, display: 'flex', alignItems: 'center' }}>
+                      {getIconByKey(key)} {/* Adding icon */}
+                      <Typography variant={key === 'CarPlate' ? 'h6' : 'body1'} className={key === 'CarPlate' ? classes.nameLabel : null} style={{ margin: 0, marginLeft: '16px' }}>
+                        {editModeVehicle ? (
+                          <TextField
+                            type="text"
+                            value={value}
+                            onChange={(e) => handleChangeVehicle(key, e.target.value)}
+                            className={classes.inputField}
+                          />
+                        ) : (
+                          value
+                        )}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
 
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      </div>
+        {/* Contract Details Table */}
+        <div style={{ marginTop: '435px' }}>
+        <Typography variant="h6" gutterBottom style={{ color: 'grey' }}>
+          &nbsp;&nbsp;Contract Details
+        </Typography>
+        <TableContainer component={Paper} className={classes.tableContainer}>
+          <Table>
+            <TableBody>
+              <TableRow> 
+                <TableCell style={{padding:5, borderBottom: 'none' }}> 
+                <Typography variant="h5" gutterBottom style={{  }}>
+                <FilterNoneOutlinedIcon style={{color:'#105e65',fontSize: 30}}/> 
+                New vehicle contract
+        </Typography >
+                </TableCell>
+                <TableCell style={{ borderBottom: 'none' }}></TableCell>
+              </TableRow>
+              {/* Contract details data */}
+              {Object.entries(contractDetailsData).map(([key, value]) => (
+                <TableRow key={key} className={classes.noBorder}>
+                  <TableCell style={{  color: 'grey', borderBottom: 'none', padding: 3}}>{key}</TableCell>
+                  <TableCell style={{  borderBottom: 'none',padding: 3 }}>{value}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </div>
+  );
+};
+
+const getIconByKey = (key) => {
+  switch (key) {
+    case 'name':
+      return <AccountCircleIcon style={{ fontSize: 40, color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'phoneNumber':
+      return <PhoneIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'email':
+      return <EmailIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'street':
+      return <LocationOnIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'city':
+      return <LocationCityIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'BatteryCap':
+      return <PowerIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'Fuel':
+      return <LocalGasStationIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'Model':
+      return <ExtensionIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'Date':
+       return <CalendarTodayIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+    case 'ID':
+       return <EditIcon style={{ color: '#105e65', margin: 0, padding: 0 }} />;
+       case 'CarPlate':
+        return <DirectionsCarIcon style={{ fontSize: 40,color: '#105e65', margin: 0, padding: 0 }} />;      
+    default:
+      return null;
+  }
+};
 
 const MainPage = () => {
     const classes = useStyles();
